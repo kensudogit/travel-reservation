@@ -1,0 +1,25 @@
+FROM openjdk:17-jdk-slim
+
+WORKDIR /app
+
+# Copy Gradle files
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradle.properties .
+COPY gradlew .
+COPY gradle gradle
+
+# Copy source code
+COPY src src
+
+# Make gradlew executable and build the application
+RUN chmod +x gradlew && ./gradlew clean build -x test
+
+# Create exports directory
+RUN mkdir -p exports
+
+# Expose port
+EXPOSE 8080
+
+# Run the application
+CMD ["java", "-jar", "build/libs/travel-reservation-1.0.0.jar"] 

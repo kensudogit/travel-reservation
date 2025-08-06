@@ -1,0 +1,150 @@
+# アプリケーション設定
+spring:
+  application:
+    name: travel-reservation-system
+  
+  # データベース設定
+  datasource:
+    url: jdbc:h2:mem:traveldb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  # JPA設定
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+  
+  # Redis設定（キャッシュ用）
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+  
+  # キャッシュ設定
+  cache:
+    type: redis
+    redis:
+      time-to-live: 1800000 # 30分
+      cache-null-values: false
+  
+  # セッション設定
+  session:
+    store-type: redis
+    redis:
+      namespace: travel:session
+      flush-mode: on_save
+  
+  # バッチ設定
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  
+  # セキュリティ設定
+  security:
+    user:
+      name: admin
+      password: admin123
+  
+  # 管理エンドポイント設定
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics,caches
+    endpoint:
+      health:
+        show-details: when-authorized
+    metrics:
+      export:
+        prometheus:
+          enabled: true
+
+# サーバー設定
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  tomcat:
+    threads:
+      max: 200
+      min-spare: 10
+    max-connections: 8192
+    accept-count: 100
+    connection-timeout: 20000
+
+# ログ設定
+logging:
+  level:
+    com.travel: INFO
+    org.springframework.cache: DEBUG
+    org.springframework.data.redis: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# カスタム設定
+travel:
+  # アプリケーション固有の設定
+  app:
+    name: "Travel Reservation System"
+    version: "1.0.0"
+    description: "高性能な旅行予約システム"
+  
+  # キャッシュ設定
+  cache:
+    tours:
+      ttl: 900000 # 15分
+    destinations:
+      ttl: 3600000 # 1時間
+    users:
+      ttl: 600000 # 10分
+  
+  # 非同期処理設定
+  async:
+    task-executor:
+      core-pool-size: 5
+      max-pool-size: 20
+      queue-capacity: 100
+    email-executor:
+      core-pool-size: 2
+      max-pool-size: 5
+      queue-capacity: 50
+  
+  # 通知設定
+  notification:
+    email:
+      enabled: true
+      from: "noreply@travelexplorer.com"
+      subject-prefix: "[Travel Explorer] "
+  
+  # 予約設定
+  reservation:
+    max-people-per-reservation: 20
+    auto-cancel-hours: 24
+    confirmation-required: true 

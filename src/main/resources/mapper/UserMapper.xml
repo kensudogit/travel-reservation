@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.travel.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.travel.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="email" property="email" />
+        <result column="full_name" property="fullName" />
+        <result column="phone_number" property="phoneNumber" />
+        <result column="role" property="role" />
+        <result column="enabled" property="enabled" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <select id="findAll" resultMap="UserResultMap">
+        SELECT * FROM users ORDER BY created_at DESC
+    </select>
+
+    <select id="findById" parameterType="long" resultMap="UserResultMap">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+
+    <select id="findByUsername" parameterType="string" resultMap="UserResultMap">
+        SELECT * FROM users WHERE username = #{username}
+    </select>
+
+    <select id="findByEmail" parameterType="string" resultMap="UserResultMap">
+        SELECT * FROM users WHERE email = #{email}
+    </select>
+
+    <select id="findByRole" parameterType="string" resultMap="UserResultMap">
+        SELECT * FROM users WHERE role = #{role} ORDER BY created_at DESC
+    </select>
+
+    <select id="findEnabledUsers" resultMap="UserResultMap">
+        SELECT * FROM users WHERE enabled = true ORDER BY created_at DESC
+    </select>
+
+    <select id="searchUsers" parameterType="string" resultMap="UserResultMap">
+        SELECT * FROM users 
+        WHERE full_name LIKE CONCAT('%', #{name}, '%') 
+        OR username LIKE CONCAT('%', #{name}, '%')
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findByCreatedAtAfter" parameterType="java.time.LocalDateTime" resultMap="UserResultMap">
+        SELECT * FROM users WHERE created_at >= #{startDate} ORDER BY created_at DESC
+    </select>
+
+    <select id="existsByUsername" parameterType="string" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM users WHERE username = #{username}
+    </select>
+
+    <select id="existsByEmail" parameterType="string" resultType="boolean">
+        SELECT COUNT(*) > 0 FROM users WHERE email = #{email}
+    </select>
+
+    <insert id="insert" parameterType="com.travel.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (username, password, email, full_name, phone_number, role, enabled, created_at, updated_at)
+        VALUES (#{username}, #{password}, #{email}, #{fullName}, #{phoneNumber}, #{role}, #{enabled}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <update id="update" parameterType="com.travel.entity.User">
+        UPDATE users 
+        SET username = #{username},
+            password = #{password},
+            email = #{email},
+            full_name = #{fullName},
+            phone_number = #{phoneNumber},
+            role = #{role},
+            enabled = #{enabled},
+            updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <select id="countByRole" parameterType="string" resultType="long">
+        SELECT COUNT(*) FROM users WHERE role = #{role}
+    </select>
+
+    <select id="findUsersWithReservations" resultMap="UserWithReservationsResultMap">
+        SELECT u.*, r.id as reservation_id, r.number_of_people, r.total_price, r.status as reservation_status
+        FROM users u
+        LEFT JOIN reservations r ON u.id = r.user_id
+        ORDER BY u.created_at DESC
+    </select>
+
+    <resultMap id="UserWithReservationsResultMap" type="com.travel.dto.UserWithReservationsDto">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="email" property="email" />
+        <result column="full_name" property="fullName" />
+        <result column="role" property="role" />
+        <result column="enabled" property="enabled" />
+        <result column="created_at" property="createdAt" />
+        <collection property="reservations" ofType="com.travel.dto.ReservationSummaryDto">
+            <id column="reservation_id" property="id" />
+            <result column="number_of_people" property="numberOfPeople" />
+            <result column="total_price" property="totalPrice" />
+            <result column="reservation_status" property="status" />
+        </collection>
+    </resultMap>
+
+</mapper> 

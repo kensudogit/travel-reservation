@@ -1,0 +1,111 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.mybatis.spring.boot' version '3.0.2'
+}
+
+group = 'com.travel'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+    
+    // Database
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+    
+    // Redis Cache
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis'
+    
+    // MyBatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
+    
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    
+    // Utilities
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    // Development Tools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// MyBatis configuration
+mybatis {
+    mapperLocations = ['classpath:mapper/*.xml']
+    typeAliasesPackage = 'com.travel.entity'
+    configuration {
+        mapUnderscoreToCamelCase = true
+        defaultFetchSize = 100
+        defaultStatementTimeout = 30
+    }
+}
+
+// Spring Boot configuration
+springBoot {
+    buildInfo()
+}
+
+// JAR configuration
+jar {
+    enabled = false
+    archiveClassifier = ''
+}
+
+// Boot JAR configuration
+bootJar {
+    archiveClassifier = ''
+    archiveFileName = "${project.name}-${project.version}.jar"
+}
+
+// Process resources to replace placeholders
+processResources {
+    filesMatching('application.yml') {
+        expand(
+            projectName: project.name,
+            projectVersion: project.version
+        )
+    }
+}
+
+// Create exports directory
+task createExportsDir {
+    doLast {
+        mkdir 'exports'
+    }
+}
+
+// Make sure exports directory exists before running
+bootRun.dependsOn createExportsDir 
