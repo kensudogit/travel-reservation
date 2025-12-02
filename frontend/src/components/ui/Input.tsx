@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 /**
  * 入力フィールドコンポーネントのプロパティ
  */
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** ラベルテキスト */
   label?: string;
   /** エラーメッセージ */

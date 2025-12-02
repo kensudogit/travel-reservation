@@ -99,12 +99,22 @@ server:
     accept-count: 100
     connection-timeout: 20000
 
+# MyBatis設定
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.travel.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
 # ログ設定
 logging:
   level:
     com.travel: INFO
     org.springframework.cache: DEBUG
     org.springframework.data.redis: DEBUG
+    org.mybatis: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
