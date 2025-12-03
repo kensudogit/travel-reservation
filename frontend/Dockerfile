@@ -19,15 +19,8 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Copy static files for standalone mode
-# Next.js standalone mode requires .next/static to be copied to standalone directory
-RUN cp -r .next/static .next/standalone/.next/static || true
-RUN cp -r public .next/standalone/public || true
-
 # Expose port
 EXPOSE 3000
 
 # Start the application
-# For standalone mode, use node directly instead of npm start
-WORKDIR /app/.next/standalone
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
