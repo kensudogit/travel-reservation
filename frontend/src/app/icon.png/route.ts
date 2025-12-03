@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 
-// Simple favicon handler to prevent 502 errors
+// Simple icon handler to prevent 502 errors
 export async function GET() {
-  // Return a minimal 1x1 transparent PNG as favicon
+  // Return a minimal 1x1 transparent PNG
   const transparentPng = Buffer.from(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
     'base64'
