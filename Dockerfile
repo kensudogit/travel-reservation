@@ -1,0 +1,29 @@
+# Frontend Dockerfile for root build context
+# This file is used when the build context is the root directory
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
+# Copy package files from frontend directory
+COPY frontend/package.json frontend/package-lock.json* ./
+
+# Install dependencies
+# Use npm ci for faster, reliable, reproducible builds
+# Fallback to npm install if package-lock.json doesn't exist
+RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --omit=dev; fi
+
+# Copy source code from frontend directory
+COPY frontend/ .
+
+# Build the application
+RUN npm run build
+
+# Expose port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]
+
