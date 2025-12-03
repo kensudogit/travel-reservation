@@ -5,11 +5,13 @@ WORKDIR /app
 # Install curl for healthcheck
 RUN apk add --no-cache curl
 
-# Copy package files
-COPY package*.json ./
+# Copy package files (including package-lock.json)
+COPY package.json package-lock.json* ./
 
-# Install dependencies (use npm install instead of npm ci for better compatibility)
-RUN npm install --omit=dev
+# Install dependencies
+# Use npm ci for faster, reliable, reproducible builds
+# Fallback to npm install if package-lock.json doesn't exist
+RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --omit=dev; fi
 
 # Copy source code
 COPY . .
