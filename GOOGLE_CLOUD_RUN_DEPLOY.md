@@ -1,24 +1,12 @@
 # Google Cloud Run デプロイ手順
 
-## 問題の解決
+## 重要な設定
 
-Google Cloud Runでフロントエンドをデプロイする際、ビルドコンテキストの設定が重要です。
+Google Cloud Runでフロントエンドをデプロイする際は、**ルートディレクトリをビルドコンテキストとして使用**してください。
 
 ## デプロイ方法
 
-### オプション1: frontend/ディレクトリをビルドコンテキストとして使用（推奨）
-
-```bash
-gcloud run deploy travel-reservation-frontend \
-  --source ./frontend \
-  --region asia-southeast1 \
-  --platform managed \
-  --allow-unauthenticated
-```
-
-この方法では、`frontend/Dockerfile`が使用され、ビルドコンテキストは`frontend/`ディレクトリになります。
-
-### オプション2: ルートディレクトリをビルドコンテキストとして使用
+### 推奨: ルートディレクトリをビルドコンテキストとして使用
 
 ```bash
 gcloud run deploy travel-reservation-frontend \
@@ -28,7 +16,9 @@ gcloud run deploy travel-reservation-frontend \
   --allow-unauthenticated
 ```
 
-この方法では、ルートの`Dockerfile`が使用されます。
+この方法では、ルートの`Dockerfile`が使用され、`frontend/package.json`と`frontend/package-lock.json`が正しくコピーされます。
+
+**注意**: `frontend/Dockerfile`は削除してください（ローカル環境用に再作成されていますが、Google Cloud Runでは使用されません）。
 
 ## Google Cloud Consoleでの設定
 
