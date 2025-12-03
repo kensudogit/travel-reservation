@@ -1,0 +1,56 @@
+# Ignore frontend Dockerfile to force use of root Dockerfile
+frontend/Dockerfile
+frontend/Dockerfile.local
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Node modules (will be installed during build)
+node_modules
+frontend/node_modules
+
+# Build outputs (but keep frontend directory structure)
+frontend/.next
+frontend/dist
+.next
+dist
+build
+*.jar
+*.war
+
+# Docker
+docker-compose.yml
+Dockerfile.backend
+Dockerfile.frontend
+
+# Documentation
+*.md
+!README.md
+
+# Scripts
+*.bat
+*.sh
+
+# Vercel
+vercel.json
+.vercel
+

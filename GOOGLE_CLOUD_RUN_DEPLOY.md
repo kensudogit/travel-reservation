@@ -32,9 +32,29 @@ gcloud run deploy travel-reservation-frontend \
    - オプション1の場合: `frontend/Dockerfile`
    - オプション2の場合: `Dockerfile`（ルート）
 
-## 現在のエラーについて
+## トラブルシューティング
 
-現在、Google Cloud Runが`frontend/Dockerfile`を検出していますが、ビルドコンテキストがルートディレクトリになっているため、`package.json`が見つかりません。
+### エラー: "/package.json": not found
 
-**解決策**: 上記のオプション1を使用して、ビルドコンテキストを`frontend/`ディレクトリに設定してください。
+このエラーが発生する場合、Google Cloud Runの設定で以下を確認してください：
+
+1. **Google Cloud Consoleでの設定確認**
+   - Cloud Run → サービスを選択
+   - 「編集と新しいリビジョンをデプロイ」をクリック
+   - 「コンテナ」タブで「ソース」セクションを確認
+   - 「ソースディレクトリ」が`.`（ルート）に設定されていることを確認
+   - 「Dockerfile」のパスが`Dockerfile`（ルート）に設定されていることを確認
+
+2. **コマンドラインで明示的に指定**
+   ```bash
+   gcloud run deploy travel-reservation-frontend \
+     --source . \
+     --region asia-southeast1 \
+     --platform managed \
+     --allow-unauthenticated \
+     --dockerfile Dockerfile
+   ```
+
+3. **キャッシュをクリア**
+   Google Cloud Runが古い設定をキャッシュしている可能性があります。サービスを削除して再作成するか、新しいリビジョンをデプロイしてください。
 

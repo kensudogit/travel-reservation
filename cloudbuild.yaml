@@ -6,7 +6,8 @@ steps:
       - '-t'
       - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_SERVICE_NAME}:${SHORT_SHA}'
       - '-f'
-      - 'Dockerfile'
+      - './Dockerfile'
+      - '--no-cache'
       - '.'
     id: 'build-image'
 
