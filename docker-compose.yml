@@ -64,7 +64,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     container_name: travel-frontend
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8081/api

@@ -2,23 +2,21 @@
 
 ## 重要な設定
 
-Google Cloud Runでフロントエンドをデプロイする際は、**ルートディレクトリをビルドコンテキストとして使用**してください。
+Google Cloud Runでフロントエンドをデプロイする際は、**`frontend/`ディレクトリをビルドコンテキストとして使用**してください。
 
 ## デプロイ方法
 
-### 推奨: ルートディレクトリをビルドコンテキストとして使用
+### 推奨: frontend/ディレクトリをビルドコンテキストとして使用
 
 ```bash
 gcloud run deploy travel-reservation-frontend \
-  --source . \
+  --source ./frontend \
   --region asia-southeast1 \
   --platform managed \
   --allow-unauthenticated
 ```
 
-この方法では、ルートの`Dockerfile`が使用され、`frontend/package.json`と`frontend/package-lock.json`が正しくコピーされます。
-
-**注意**: `frontend/Dockerfile`は削除してください（ローカル環境用に再作成されていますが、Google Cloud Runでは使用されません）。
+この方法では、`frontend/Dockerfile`が使用され、ビルドコンテキストは`frontend/`ディレクトリになります。`package.json`と`package-lock.json`が正しくコピーされます。
 
 ## Google Cloud Consoleでの設定
 
@@ -42,17 +40,16 @@ gcloud run deploy travel-reservation-frontend \
    - Cloud Run → サービスを選択
    - 「編集と新しいリビジョンをデプロイ」をクリック
    - 「コンテナ」タブで「ソース」セクションを確認
-   - 「ソースディレクトリ」が`.`（ルート）に設定されていることを確認
-   - 「Dockerfile」のパスが`Dockerfile`（ルート）に設定されていることを確認
+   - **「ソースディレクトリ」を`frontend/`に設定**してください
+   - 「Dockerfile」のパスが`Dockerfile`（`frontend/`ディレクトリ内）に設定されていることを確認
 
 2. **コマンドラインで明示的に指定**
    ```bash
    gcloud run deploy travel-reservation-frontend \
-     --source . \
+     --source ./frontend \
      --region asia-southeast1 \
      --platform managed \
-     --allow-unauthenticated \
-     --dockerfile Dockerfile
+     --allow-unauthenticated
    ```
 
 3. **キャッシュをクリア**

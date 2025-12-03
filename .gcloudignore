@@ -1,5 +1,5 @@
-# Ignore frontend Dockerfile to force use of root Dockerfile
-frontend/Dockerfile
+# Keep frontend/Dockerfile for Google Cloud Run
+# frontend/Dockerfile
 frontend/Dockerfile.local
 
 # Git
